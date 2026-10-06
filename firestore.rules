@@ -1,0 +1,18 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /registrations/{registrationId} {
+      allow create: if request.resource.data.firstName is string
+        && request.resource.data.surname is string
+        && request.resource.data.email is string
+        && request.resource.data.phone is string
+        && request.resource.data.institutionType in ['University','Polytechnic']
+        && request.resource.data.institution is string
+        && request.resource.data.department is string
+        && request.resource.data.program in ['SIWES','IT','DIPLOMA']
+        && request.resource.data.previousStack is string
+        && request.resource.data.reason is string;
+      allow read, update, delete: if false;
+    }
+  }
+}

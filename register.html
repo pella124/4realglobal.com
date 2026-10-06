@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration | 4REAL GLOBAL IT SOLUTION</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="registration-page">
+    <header class="header">
+        <nav class="nav container"><a class="brand" href="index.html"><img class="brand-logo" src="assets/logo.png"
+                    alt="4REAL GLOBAL IT SOLUTION logo"></a>
+            <div class="nav-links open"><a href="index.html">Home</a><a href="index.html#courses">Courses</a><a
+                    href="index.html#about">About</a><a class="nav-cta"
+                    href="https://chat.whatsapp.com/D77oIhaLk0EKWH7ESaAJaw" target="_blank">Join WhatsApp Group</a>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <section class="registration-hero">
+            <div class="container">
+                <p class="section-tag">4REAL GLOBAL IT SOLUTION</p>
+                <h1>Start your <span>registration.</span></h1>
+                <p>Complete the form below to register for SIWES, IT or Diploma training. Your application is securely
+                    submitted to our Firebase database. After successful submission, a confirmation email is sent
+                    through the Firebase email service once the backend email settings are configured.</p>
+            </div>
+        </section>
+        <section class="registration-wrap">
+            <div class="container">
+                <div class="registration-card">
+                    <form id="registrationForm" class="registration-form">
+                        <div>
+                            <div class="form-section-title"><span>01</span>
+                                <h2>Personal Information</h2>
+                            </div>
+                            <div class="form-grid">
+                                <div class="field"><label for="firstName">First Name <span
+                                            class="required">*</span></label><input id="firstName" required
+                                        placeholder="Enter first name"></div>
+                                <div class="field"><label for="surname">Surname <span
+                                            class="required">*</span></label><input id="surname" required
+                                        placeholder="Enter surname"></div>
+                                <div class="field"><label for="email">Email Address <span
+                                            class="required">*</span></label><input id="email" type="email" required
+                                        placeholder="you@example.com"></div>
+                                <div class="field"><label for="phone">Phone Number <span
+                                            class="required">*</span></label><input id="phone" type="tel" required
+                                        placeholder="+234..."></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-section-title"><span>02</span>
+                                <h2>Institution</h2>
+                            </div>
+                            <div class="field"><label>Institution Type <span class="required">*</span></label>
+                                <div class="choice-row"><label class="choice"><input type="radio" name="institutionType"
+                                            value="University" required> University</label><label class="choice"><input
+                                            type="radio" name="institutionType" value="Polytechnic" required>
+                                        Polytechnic</label>
+                                </div>
+                            </div>
+                            <div class="form-grid" style="margin-top:16px">
+                                <div class="field"><label for="institution">Institution / School <span
+                                            class="required">*</span></label><select id="institution" required disabled>
+                                        <option value="">First select University or Polytechnic</option>
+                                    </select><span class="helper">The list changes automatically based on the
+                                        institution type selected.</span></div>
+                                <div class="field"><label for="department">Department <span
+                                            class="required">*</span></label><input id="department" required
+                                        placeholder="e.g. Computer Science"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-section-title"><span>03</span>
+                                <h2>Training Information</h2>
+                            </div>
+                            <div class="form-grid">
+                                <div class="field"><label for="program">Select Program <span
+                                            class="required">*</span></label><select id="program" required>
+                                        <option value="">Select program</option>
+                                        <option>SIWES</option>
+                                        <option>IT</option>
+                                        <option>DIPLOMA</option>
+                                    </select></div>
+                                <div class="field"><label for="stack">Select Stack from Previous Course <span
+                                            class="required">*</span></label><select id="stack" required>
+                                        <option value="">Select your previous/desired stack</option>
+                                        <option>Web Development - Frontend</option>
+                                        <option>Web Development - Backend</option>
+                                        <option>Web Development - Full Stack</option>
+                                        <option>Data Analysis</option>
+                                        <option>Networking</option>
+                                        <option>UI/UX Design</option>
+                                        <option>None / New to IT</option>
+                                    </select></div>
+                                <div class="field full"><label for="reason">Why did you choose this course? <span
+                                            class="required">*</span></label><textarea id="reason" rows="5" required
+                                        placeholder="Tell us what you want to achieve from the training..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-note">By submitting this form, you confirm that the information supplied is
+                            accurate and you consent to 4REAL GLOBAL IT SOLUTION using it for registration and training
+                            communication.</div>
+                        <div class="submit-row"><span class="submit-status" id="status"></span><button
+                                class="btn btn-primary" id="submitBtn" type="submit">Complete Registration ↗</button>
+                        </div>
+                    </form>
+                    <div class="success-box" id="successBox">
+                        <div class="success-icon">✓</div>
+                        <h2>Registration Successful</h2>
+                        <p>Thank you for registering with 4REAL GLOBAL IT SOLUTION. Your registration number is <span
+                                class="reg-number" id="regNumber"></span>. A confirmation email will be sent to your
+                            email address when the Firebase email service is configured.</p><a class="btn btn-primary"
+                            href="https://chat.whatsapp.com/D77oIhaLk0EKWH7ESaAJaw" target="_blank">Join Our WhatsApp
+                            Group ↗</a><br><br><a href="index.html" class="text-link">← Return to website</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script type="module" src="register.js"></script>
+</body>
+
+</html>
