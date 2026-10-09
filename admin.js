@@ -1,6 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import {
-  getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut
+  getAuth, onAuthStateChanged, signInWithEmailAndPassword,
+signOut, sendEmailVerification
 } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 import {
   getFirestore, collection, getDocs, query, orderBy, updateDoc, doc, serverTimestamp
@@ -26,6 +27,15 @@ let allRegistrations = [];
 let loading = false;
 
 $("year").textContent = new Date().getFullYear();
+let sendingVerification = false;
+
+const verifyEmailBtn = document.createElement("button");
+verifyEmailBtn.type = "button";
+verifyEmailBtn.textContent = "Resend verification email";
+verifyEmailBtn.style.cssText =
+  "width:100%;padding:12px;margin-top:10px;cursor:pointer;border-radius:8px;";
+
+loginForm.insertAdjacentElement("afterend", verifyEmailBtn);
 
 function setMessage(el, message = "", success = false) {
   el.textContent = message;
@@ -55,11 +65,23 @@ function escapeHtml(value) {
     "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;"
   })[ch]);
 }
+
 function updateStats(rows) {
   $("totalCount").textContent = rows.length;
-  $("siwesCount").textContent = rows.filter(r => String(r.program || "").toUpperCase() === "SIWES").length;
-  $("itCount").textContent = rows.filter(r => String(r.program || "").toUpperCase() === "IT").length;
-  $("diplomaCount").textContent = rows.filter(r => String(r.program || "").toUpperCase() === "DIPLOMA").length;
+
+  const getProgramCount = (programName) => {
+    return rows.filter(({ data }) => {
+      const program = String(data?.program || "")
+        .trim()
+        .toUpperCase();
+
+      return program === programName;
+    }).length;
+  };
+
+  $("siwesCount").textContent = getProgramCount("SIWES");
+  $("itCount").textContent = getProgramCount("IT");
+  $("diplomaCount").textContent = getProgramCount("DIPLOMA");
 }
 function filteredRows() {
   const term = $("searchInput").value.trim().toLowerCase();
@@ -161,6 +183,83 @@ loginForm.addEventListener("submit", async (event) => {
   }
 });
 
+verifyEmailBtn.addEventListener("click", async () => {
+  const email = $("email").value.trim().toLowerCase();
+  const password = $("password").value;
+
+  setMessage(loginMessage, "");
+
+  if (email !== ADMIN_EMAIL) {
+    setMessage(loginMessage, "Enter the authorised admin email.");
+    return;
+  }
+
+  if (!password) {
+    setMessage(
+      loginMessage,
+      "Enter your admin password, then click Resend verification email."
+    );
+    return;
+  }
+
+  verifyEmailBtn.disabled = true;
+  verifyEmailBtn.textContent = "Sending email...";
+  sendingVerification = true;
+
+  try {
+    const result = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    if (result.user.emailVerified) {
+      setMessage(
+        loginMessage,
+        "Your email is already verified. You can sign in.",
+        true
+      );
+    } else {
+      await sendEmailVerification(result.user);
+
+      setMessage(
+        loginMessage,
+        "Verification email sent. Check your Gmail Inbox and Spam folder.",
+        true
+      );
+    }
+  } catch (error) {
+    console.error("Verification email error:", error);
+
+    const messages = {
+      "auth/invalid-credential":
+        "Your email or password is incorrect.",
+      "auth/too-many-requests":
+        "Too many attempts. Wait a while before trying again.",
+      "auth/too-many-emails":
+        "Too many emails have been sent. Try again later.",
+      "auth/network-request-failed":
+        "Network error. Check your internet connection."
+    };
+
+    setMessage(
+      loginMessage,
+      messages[error.code] ||
+      `${error.code || "Error"}: ${error.message || "Could not send verification email."}`
+    );
+  } finally {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Sign-out error:", error);
+    }
+
+    sendingVerification = false;
+    verifyEmailBtn.disabled = false;
+    verifyEmailBtn.textContent = "Resend verification email";
+  }
+});
+
 signOutBtn.addEventListener("click", async () => {
   await signOut(auth);
   allRegistrations = [];
@@ -219,6 +318,7 @@ $("exportBtn").addEventListener("click", () => {
 });
 
 onAuthStateChanged(auth, async (user) => {
+  if (sendingVerification) return;
   if (!user) {
     showSignedOut();
     return;
