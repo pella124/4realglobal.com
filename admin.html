@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Admin Dashboard | 4REAL GLOBAL IT SOLUTION</title>
+  <link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./index.html" aria-label="4REAL home">
+      <span class="brand-mark">4R</span>
+      <span><strong>4REAL GLOBAL</strong><small>IT SOLUTION · ADMIN</small></span>
+    </a>
+    <div class="top-actions">
+      <span id="adminIdentity" class="admin-identity" hidden></span>
+      <button id="signOutBtn" class="btn btn-light" hidden>Sign out</button>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section id="loginPanel" class="login-panel">
+      <div class="login-copy">
+        <p class="eyebrow">SECURE ADMINISTRATION</p>
+        <h1>Welcome back.</h1>
+        <p>Sign in with your authorised 4REAL administrator account to manage student registrations.</p>
+        <ul class="login-points">
+          <li>Private student records</li>
+          <li>Registration search and filters</li>
+          <li>Controlled status updates</li>
+        </ul>
+      </div>
+      <form id="loginForm" class="login-card">
+        <h2>Admin sign in</h2>
+        <p class="muted">Use your Firebase Authentication account.</p>
+        <label for="email">Administrator email</label>
+        <input id="email" type="email" autocomplete="username" required placeholder="admin@example.com">
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password" required placeholder="Enter password">
+        <button id="loginBtn" class="btn btn-primary btn-wide" type="submit">Sign in securely</button>
+        <p id="loginMessage" class="message" role="status" aria-live="polite"></p>
+        <p class="tiny-note">Access is restricted to the authorised administrator account.</p>
+      </form>
+    </section>
+
+    <section id="dashboardPanel" hidden>
+      <div class="dashboard-heading">
+        <div>
+          <p class="eyebrow">REGISTRATION MANAGEMENT</p>
+          <h1>Admin dashboard</h1>
+          <p class="muted">Review and manage student training registrations.</p>
+        </div>
+        <button id="refreshBtn" class="btn btn-light">↻ Refresh records</button>
+      </div>
+
+      <p id="dashboardMessage" class="message" role="status" aria-live="polite"></p>
+
+      <div class="stats-grid">
+        <article class="stat-card"><span class="stat-label">Total registrations</span><strong id="totalCount">—</strong><span class="stat-foot">All submitted records</span></article>
+        <article class="stat-card"><span class="stat-label">SIWES</span><strong id="siwesCount">—</strong><span class="stat-foot">SIWES applicants</span></article>
+        <article class="stat-card"><span class="stat-label">IT</span><strong id="itCount">—</strong><span class="stat-foot">Industrial training</span></article>
+        <article class="stat-card"><span class="stat-label">DIPLOMA</span><strong id="diplomaCount">—</strong><span class="stat-foot">Diploma applicants</span></article>
+      </div>
+
+      <section class="records-card">
+        <div class="records-header">
+          <div><h2>Student registrations</h2><p class="muted">Search and filter the records below.</p></div>
+          <button id="exportBtn" class="btn btn-primary">Export CSV</button>
+        </div>
+        <div class="filters">
+          <div class="search-wrap"><label for="searchInput">Search registrations</label><input id="searchInput" type="search" placeholder="Name, email, school, registration no."></div>
+          <div><label for="programFilter">Programme</label><select id="programFilter"><option value="">All programmes</option><option>SIWES</option><option>IT</option><option>DIPLOMA</option></select></div>
+          <div><label for="statusFilter">Status</label><select id="statusFilter"><option value="">All statuses</option><option value="registered">Registered</option><option value="reviewing">Reviewing</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Student</th><th>School / Department</th><th>Programme</th><th>Contact</th><th>Registration No.</th><th>Status</th><th>Registered</th></tr></thead>
+            <tbody id="registrationsBody"><tr><td colspan="7" class="empty-cell">Sign in to load registrations.</td></tr></tbody>
+          </table>
+        </div>
+        <div class="table-footer"><span id="recordCount">0 records</span><span>Student information is confidential.</span></div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="footer">© <span id="year"></span> 4REAL GLOBAL IT SOLUTION · Secure administration</footer>
+  <script type="module" src="./admin.js"></script>
+</body>
+</html>

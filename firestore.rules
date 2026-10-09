@@ -1,18 +1,40 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    function isAuthorisedAdmin() {
+      return request.auth != null
+        && request.auth.token.email == 'alanishina606@gmail.com'
+        && request.auth.token.email_verified == true;
+    }
+
     match /registrations/{registrationId} {
-      allow create: if request.resource.data.firstName is string
-        && request.resource.data.surname is string
-        && request.resource.data.email is string
-        && request.resource.data.phone is string
-        && request.resource.data.institutionType in ['University','Polytechnic']
-        && request.resource.data.institution is string
-        && request.resource.data.department is string
-        && request.resource.data.program in ['SIWES','IT','DIPLOMA']
-        && request.resource.data.previousStack is string
-        && request.resource.data.reason is string;
-      allow read, update, delete: if false;
+      // Public visitors may submit registrations only.
+      allow create: if
+        request.resource.data.firstName is string &&
+        request.resource.data.surname is string &&
+        request.resource.data.email is string &&
+        request.resource.data.phone is string &&
+        request.resource.data.institutionType in ['University', 'Polytechnic'] &&
+        request.resource.data.institution is string &&
+        request.resource.data.department is string &&
+        request.resource.data.program in ['SIWES', 'IT', 'DIPLOMA'] &&
+        request.resource.data.previousStack is string &&
+        request.resource.data.reason is string &&
+        request.resource.data.registrationNumber is string &&
+        request.resource.data.status == 'registered';
+
+      // Only the verified, authorised admin can read or update registrations.
+      allow read: if isAuthorisedAdmin();
+
+      allow update: if isAuthorisedAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['status', 'updatedAt', 'updatedBy'])
+        && request.resource.data.status in ['registered', 'reviewing', 'approved', 'rejected']
+        && request.resource.data.updatedBy == request.auth.token.email;
+
+      // No client-side deletes, even for the admin.
+      allow delete: if false;
     }
   }
 }
